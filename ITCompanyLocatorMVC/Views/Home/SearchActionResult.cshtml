@@ -1,0 +1,62 @@
+﻿<row>
+    <h2>IT Companies at Location <b style="color: cornflowerblue">@ViewData["CityName"]</b></h2>
+</row>
+<row>
+    <table class=" table table-bordered table-hover">
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+        </tr>
+
+        @foreach (var company in ViewBag.Companies)
+        {
+            <tr>
+                <td>@company.Name</td>
+                <td>@company.Address</td>
+            </tr>
+        }
+    </table>
+</row>
+<row>
+    <div>
+        <div class="btn-group" role="group" aria-label="...">
+            @if ((bool)ViewData["hasPreviousPage"])
+            {
+                @using (Html.BeginForm("SearchActionResult", "Home"))
+                {
+                    <button type="submit" name="prevButton" id="prev" value="prev" class="btn btn-default">Prev</button>
+                }
+            }
+
+            @if ((bool)ViewData["isToken"])
+    {
+        @using (Html.BeginForm("SearchActionResult", "Home"))
+{
+        <button type="submit" name="nextButton" id="next" value="next" class="btn btn-default">Next</button>
+}
+
+}
+
+
+
+        </div>
+    </div>
+</row>
+
+@*<script type="text/javascript">
+
+    function CheckResultAvailability()
+    { 
+        var isToken = false;
+        if (isToken == true) {
+            document.getElementById("next").disabled = false;
+        }
+        else
+        { 
+            document.getElementById("next").disabled = true;
+        }
+    }
+
+</script>*@
+
+  
