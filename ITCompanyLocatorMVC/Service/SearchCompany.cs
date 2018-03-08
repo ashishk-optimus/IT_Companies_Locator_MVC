@@ -10,7 +10,7 @@ namespace ITCompanyLocatorMVC.Service
 {
     public class SearchCompany
     {
-        private static string _apiKey = "AIzaSyDhQGQHpPK9JjK4_e1grZ31_zWAkDft6_o";
+        private static string _apiKey = "AIzaSyDXNm60TAWJ0dDIF6CDAYxzuEL5RP7Yv3E";
         public static string NextPageToken;
         public static bool isToken;
         public static bool hasPreviousPage;

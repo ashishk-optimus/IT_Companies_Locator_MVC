@@ -34,15 +34,32 @@ namespace ITCompanyLocatorMVC.Controllers
             {
                 if (Request.Form.ContainsKey("nextButton"))
                 {
-                    BaseUrl = SearchCompany.GiveBaseUrl(cityName, SearchCompany.NextPageToken);
+                    if(SearchCompany.CountPageList + 1 == SearchCompany.PageList.Count)
+                    {
+                        ViewData["isToken"] = SearchCompany.isToken;
+                        ViewBag.Companies = (CompanyDetails[])SearchCompany.PageList[SearchCompany.CountPageList];
+                        if (SearchCompany.PageList.Count == 3)
+                        {
+                            SearchCompany.isToken = false;
+                        }
+
+                        SearchCompany.CountPageList += 1;
+                        ViewData["hasPreviousPage"] = SearchCompany.hasPreviousPage;
+
+                        return View();
+                    }
+                    else
+                    {
+                        BaseUrl = SearchCompany.GiveBaseUrl(cityName, SearchCompany.NextPageToken);
+                    }
+                    
                 }
 
                 if (Request.Form.ContainsKey("prevButton"))
                 {
                     SearchCompany.isToken = true;
-                    ViewBag.Companies = (CompanyDetails[])SearchCompany.PageList[SearchCompany.CountPageList - 2];
-                    ViewData["CityName"] = cityName;
                     ViewData["isToken"] = SearchCompany.isToken;
+                    ViewBag.Companies = (CompanyDetails[])SearchCompany.PageList[SearchCompany.CountPageList - 2];
                     if(SearchCompany.CountPageList == 2)
                     {
                         SearchCompany.hasPreviousPage = false;
