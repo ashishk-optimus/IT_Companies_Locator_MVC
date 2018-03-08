@@ -43,7 +43,7 @@ namespace ITCompanyLocatorMVC.Controllers
                     ViewBag.Companies = (CompanyDetails[])SearchCompany.PageList[SearchCompany.CountPageList - 2];
                     ViewData["CityName"] = cityName;
                     ViewData["isToken"] = SearchCompany.isToken;
-                    if(SearchCompany.CountPageList == 0)
+                    if(SearchCompany.CountPageList == 2)
                     {
                         SearchCompany.hasPreviousPage = false;
                     }

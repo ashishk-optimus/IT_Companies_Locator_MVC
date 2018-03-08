@@ -19,44 +19,28 @@
 </row>
 <row>
     <div>
-        <div class="btn-group" role="group" aria-label="...">
+        <span class="pull-left">
             @if ((bool)ViewData["hasPreviousPage"])
-            {
-                @using (Html.BeginForm("SearchActionResult", "Home"))
-                {
-                    <button type="submit" name="prevButton" id="prev" value="prev" class="btn btn-default">Prev</button>
-                }
-            }
-
+        {
+            @using (Html.BeginForm("SearchActionResult", "Home"))
+        {
+            <button type="submit" name="prevButton" id="prev" value="prev" class="btn btn-primary">Prev</button>
+    }
+    }
+        </span>
+        <span class="pull-right">
             @if ((bool)ViewData["isToken"])
-    {
-        @using (Html.BeginForm("SearchActionResult", "Home"))
-{
-        <button type="submit" name="nextButton" id="next" value="next" class="btn btn-default">Next</button>
-}
+        {
+            @using (Html.BeginForm("SearchActionResult", "Home"))
+        {
+            <button type="submit" name="nextButton" id="next" value="next" class="btn btn-primary">Next</button>
+    }
 
-}
-
-
-
-        </div>
+    }
+            </span>
     </div>
 </row>
 
-@*<script type="text/javascript">
 
-    function CheckResultAvailability()
-    { 
-        var isToken = false;
-        if (isToken == true) {
-            document.getElementById("next").disabled = false;
-        }
-        else
-        { 
-            document.getElementById("next").disabled = true;
-        }
-    }
-
-</script>*@
 
   
