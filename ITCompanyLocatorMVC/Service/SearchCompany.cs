@@ -6,19 +6,32 @@ using ITCompanyLocatorMVC.Models;
 
 namespace ITCompanyLocatorMVC.Service
 {
+    /// <summary>
+    /// This class is responsible to take request from controller and 
+    /// return responses as model to controller
+    /// </summary>
     public class SearchCompany
     {
 
+
+        #region Private Fields
+
         private const string ApiKey = "AIzaSyBnYtjMBztN69lfDr2UF04LJg1TpHAokek";
         private static readonly List<CompanyDetails[]> PageList = new List<CompanyDetails[]>();
-        private static int _countPageList;
         private static string _baseUrl;
+
+        #endregion
+
+        #region Public Fields
+
         public static string NextPageToken;
         public static bool IsToken;
         public static bool HasPreviousPage;
         public static int CountPrevClicked;
+        public static int CountPageList;
 
-
+        #endregion
+         
         #region Private Methods
 
         /// <summary>
@@ -99,7 +112,7 @@ namespace ITCompanyLocatorMVC.Service
             PageList.Add(company);
 
             // Keep track of number of added list of company
-            _countPageList = PageList.Count;
+            CountPageList = PageList.Count;
 
             // when we have only one page available i.e. PageList of length 1
             HasPreviousPage = false;
@@ -148,15 +161,15 @@ namespace ITCompanyLocatorMVC.Service
 
             // Setting next button visible on UI
             IsToken = true;
-            CompanyDetails[] prevCompany = PageList[_countPageList - 2];
+            CompanyDetails[] prevCompany = PageList[CountPageList - 2];
 
             // when PageList[0] is reached, then making prev button disable on UI
-            if (_countPageList == 2)
+            if (CountPageList == 2)
             {
                 HasPreviousPage = false;
             }
 
-            _countPageList -= 1;
+            CountPageList -= 1;
 
             return prevCompany;
         }
@@ -167,15 +180,17 @@ namespace ITCompanyLocatorMVC.Service
         /// <returns></returns>
         public static CompanyDetails[] GetNextResults()
         {
-            CompanyDetails[] nextCompany = PageList[_countPageList];
+            CompanyDetails[] nextCompany = PageList[CountPageList];
 
             CountPrevClicked -= 1;
             HasPreviousPage = true;
-            if (_countPageList == 2)
+
+            if (CountPageList == 2)
             {
                 IsToken = false;
             }
-            _countPageList += 1;
+
+            CountPageList += 1;
 
             return nextCompany;
         }

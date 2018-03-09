@@ -4,9 +4,12 @@ using System.Xml;
 
 namespace ITCompanyLocatorMVC.Data
 {
+    /// <summary>
+    /// It will make Http request to google places api and 
+    /// fetch the result through method
+    /// </summary>
     public class ApiData
     {
-        
         /// <summary>
         /// Return the response for given city in XmlDocument object for the given baseUrl
         /// </summary>

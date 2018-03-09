@@ -33,7 +33,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 
-                <form class="navbar-form navbar-left" role="form" action="/Home/SearchActionResult" method="post">
+                <form name="searchForm"class="navbar-form navbar-left" role="form" action="/Home/SearchActionResult" method="post" onsubmit="return validateCity()">
                     <div class="form-group">
                         <input type="text" class="form-control" id="cityName" name="cityName" placeholder="Type Location" required>
                     </div>
@@ -74,8 +74,23 @@
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
+        
+        <script type ="text/javascript">
+            function validateCity() {
+                var location = document.forms["searchForm"]["cityName"].value;
+                var format = /^[!#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
 
-    @RenderSection("Scripts", required: false)
+                if (location.match(format)) {
+                    alert("Special characters are not allowed..!!!");
+                    return false;
+                }
+   
+            }
+        </script>
+    </environment>
+    
+    
+
+@RenderSection("Scripts", required: false)
 </body>
 </html>

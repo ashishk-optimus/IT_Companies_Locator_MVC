@@ -1,46 +1,60 @@
-﻿<row>
-    <h2>IT Companies at Location <b style="color: cornflowerblue">@ViewData["CityName"]</b></h2>
+﻿@if (ViewData["AvailableResults"] == (object) 0)
+{<row>
+    <div class="well well-lg">Invalid Location or No Companies exist for given Location name.</div>
 </row>
-<row>
-    <table class=" table table-bordered table-hover">
-        <tr>
-            <th>Name</th>
-            <th>Address</th>
-        </tr>
+}
+else
+{
+    <row>
+        <h2>IT Companies at Location <b style="color: cornflowerblue">@ViewData["CityName"]</b></h2>
+    </row>
+    <row>
 
-        @foreach (var company in ViewBag.Companies)
-        {
+        <table class=" table table-bordered table-hover">
             <tr>
-                <td>@company.Name</td>
-                <td>@company.Address</td>
+                <th>Name</th>
+                <th>Address</th>
             </tr>
-        }
-    </table>
-</row>
-<row>
-    <div>
-        <span class="pull-left">
-            @if ((bool)ViewData["hasPreviousPage"])
-        {
-            @using (Html.BeginForm("SearchActionResult", "Home"))
-        {
-            <button type="submit" name="prevButton" id="prev" value="prev" class="btn btn-default">Prev</button>
-    }
-    }
-        </span>
-        <span class="pull-right">
-            @if ((bool)ViewData["isToken"])
-        {
-            @using (Html.BeginForm("SearchActionResult", "Home"))
-        {
-            <button type="submit" name="nextButton" id="next" value="next" class="btn btn-default">Next</button>
-    }
 
-    }
+            @foreach (var company in ViewBag.Companies)
+            {
+                <tr>
+                    <td>@company.Name</td>
+                    <td>@company.Address</td>
+                </tr>
+            }
+        </table>
+    </row>
+    <row>
+        <div>
+            <span class="pull-left">
+                @if ((bool)ViewData["hasPreviousPage"])
+                {
+                    using (Html.BeginForm("SearchActionResult", "Home"))
+                    {
+                        <button type="submit" name="prevButton" id="prev" value="prev" class="btn btn-default">Prev</button>
+                    }
+                }
             </span>
-    </div>
-</row>
+            <span class="pull-right">
+                @if ((bool)ViewData["isToken"])
+                {
+                    using (Html.BeginForm("SearchActionResult", "Home"))
+                    {
+                        <button type="submit" name="nextButton" id="next" value="next" class="btn btn-default">Next</button>
+                    }
+
+                }
+            </span>
+        </div>
+    </row>
+
+}
 
 
 
-  
+
+
+
+
+
