@@ -1,5 +1,3 @@
-using System;
-
 namespace ITCompanyLocatorMVC.Models
 {
     public class ErrorViewModel

@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ITCompanyLocatorMVC.Models;
 using ITCompanyLocatorMVC.Service;
-using System.Xml;
 
 namespace ITCompanyLocatorMVC.Controllers
 {
     public class HomeController : Controller
     {
-        private static string cityName;
-        private static string BaseUrl;
+        private static string _cityName;
+        private CompanyDetails[] _company;
 
         public IActionResult Index()
         {
@@ -21,68 +15,45 @@ namespace ITCompanyLocatorMVC.Controllers
         }
 
         public IActionResult SearchActionResult()
-        { 
+        {
+            
 
             if (Request.Form.ContainsKey("cityName"))
             {
-                cityName = Request.Form["cityName"].ToString();
+                _cityName = Request.Form["cityName"].ToString();
 
-                // Getting baseurl consist of cityname, api key, tokens(if any)
-                BaseUrl = SearchCompany.GiveBaseUrl(cityName);
+                // Getting list of objects for all the companies
+                _company = SearchCompany.GiveCompanyDetails(_cityName);
             }
             else
             {
                 if (Request.Form.ContainsKey("nextButton"))
                 {
-                    if(SearchCompany.CountPageList + 1 == SearchCompany.PageList.Count)
+                    if(SearchCompany.CountPrevClicked != 0)
                     {
-                        ViewData["isToken"] = SearchCompany.isToken;
-                        ViewBag.Companies = (CompanyDetails[])SearchCompany.PageList[SearchCompany.CountPageList];
-                        if (SearchCompany.PageList.Count == 3)
-                        {
-                            SearchCompany.isToken = false;
-                        }
+                        // Getting List of objects for all the next available companies
+                        _company = SearchCompany.GetNextResults();
 
-                        SearchCompany.CountPageList += 1;
-                        ViewData["hasPreviousPage"] = SearchCompany.hasPreviousPage;
-
-                        return View();
                     }
                     else
                     {
-                        BaseUrl = SearchCompany.GiveBaseUrl(cityName, SearchCompany.NextPageToken);
+                        // Getting list of objects for all the companies for available token
+                        _company = SearchCompany.GiveCompanyDetails(_cityName, SearchCompany.NextPageToken);
                     }
-                    
+
                 }
 
                 if (Request.Form.ContainsKey("prevButton"))
                 {
-                    SearchCompany.isToken = true;
-                    ViewData["isToken"] = SearchCompany.isToken;
-                    ViewBag.Companies = (CompanyDetails[])SearchCompany.PageList[SearchCompany.CountPageList - 2];
-                    if(SearchCompany.CountPageList == 2)
-                    {
-                        SearchCompany.hasPreviousPage = false;
-                    }
-
-                    SearchCompany.CountPageList -= 1;
-                    ViewData["hasPreviousPage"] = SearchCompany.hasPreviousPage;
-
-                    return View();
+                    // Getting List of objects for all the previous available companies
+                    _company = SearchCompany.GetPreviousResults();
                 }
             }
-            
 
-            // Getting company details in xml based on passed BaseUrl
-            XmlDocument xmlDoc = SearchCompany.GiveCompaniesInXml(BaseUrl);
-
-            // Getting array of objects for all the companies
-            CompanyDetails[] company = SearchCompany.GiveCompanyDetails(xmlDoc);
-
-            ViewBag.Companies = company;
-            ViewData["CityName"] = cityName;
-            ViewData["isToken"] = SearchCompany.isToken;
-            ViewData["hasPreviousPage"] = SearchCompany.hasPreviousPage;
+            ViewBag.Companies = _company;
+            ViewData["CityName"] = _cityName;
+            ViewData["isToken"] = SearchCompany.IsToken;
+            ViewData["hasPreviousPage"] = SearchCompany.HasPreviousPage;
 
             return View();
         }

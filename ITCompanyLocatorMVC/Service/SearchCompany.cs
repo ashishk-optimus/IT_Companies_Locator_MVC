@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using System.Xml;
+using ITCompanyLocatorMVC.Data;
 using ITCompanyLocatorMVC.Models;
 
 namespace ITCompanyLocatorMVC.Service
@@ -11,17 +9,23 @@ namespace ITCompanyLocatorMVC.Service
     public class SearchCompany
     {
         private static string _apiKey = "AIzaSyDXNm60TAWJ0dDIF6CDAYxzuEL5RP7Yv3E";
+        private static readonly List<CompanyDetails[]> PageList = new List<CompanyDetails[]>();
+        private static int _countPageList;
+        private static string _baseUrl;
         public static string NextPageToken;
-        public static bool isToken;
-        public static bool hasPreviousPage;
-        public static List<CompanyDetails[]> PageList = new List<CompanyDetails[]>(); 
-        public static int CountPageList;
+        public static bool IsToken;
+        public static bool HasPreviousPage;
+        public static int CountPrevClicked;
+
+
+        #region Private Methods
+
         /// <summary>
         /// Return the url for given city in string without using any token
         /// </summary>
-        /// <param name="cityName"></param>
+        /// <param name="cityNameAndTokenStrings"></param>
         /// <returns>Url to make HTTP Request</returns>
-        public static string GiveBaseUrl(params string[] cityNameAndTokenStrings)
+        private string GiveBaseUrl(params string[] cityNameAndTokenStrings)
         {
             string cityName = cityNameAndTokenStrings[0];
             string formattedCityName = String.Empty; // string to format the provided city name in reuired url
@@ -53,36 +57,12 @@ namespace ITCompanyLocatorMVC.Service
         }
 
         /// <summary>
-        /// Return the response for given city in XmlDocument object for the given baseUrl
-        /// </summary>
-        /// <param name="baseUrl"></param>
-        /// <returns>XmlDocument</returns>
-        public static XmlDocument GiveCompaniesInXml(string baseUrl)
-        {
-            // Making HTTP Request using baseURL 
-            HttpWebRequest req = WebRequest.Create(baseUrl) as HttpWebRequest;
-
-            // Object of XmlDocument to hold the Http Response in XML format
-            XmlDocument _xmlDoc = new XmlDocument();
-            if (req != null)
-                using (HttpWebResponse resp = req.GetResponse() as HttpWebResponse)
-                {
-                    if (resp != null)
-                    {
-                        _xmlDoc.Load(resp.GetResponseStream() ?? throw new InvalidOperationException()); // Loading response to XmlDocument object
-                    }
-                }
-
-            return _xmlDoc;
-        }
-
-        /// <summary>
         /// Getting details of company from name and formatted_address tag of xml document
         /// and creating object for each company
         /// </summary>
         /// <param name="xmlDoc"></param>
         /// <returns>Details of company as a list of CompanyDetails object</returns>
-        public static CompanyDetails[] GiveCompanyDetails(XmlDocument xmlDoc)
+        private CompanyDetails[] GetCompanies(XmlDocument xmlDoc)
         {
             // Getting all the IT Companies name with tag 'name' in XML file to XmlNodeList object
             XmlNodeList nodeListName = xmlDoc.GetElementsByTagName("name");
@@ -92,22 +72,22 @@ namespace ITCompanyLocatorMVC.Service
 
             XmlNodeList nextToken = xmlDoc.GetElementsByTagName("next_page_token");
 
-            isToken = false;
+            IsToken = false;
 
             foreach (XmlNode token in nextToken)
             {
-                NextPageToken = (token.InnerText).ToString();
-                isToken = true;
+                NextPageToken = token.InnerText;
+                IsToken = true;
             }
 
             // Count IT Companies for provided Location
-            int _countCompanyName = nodeListName.Count;
+            int countCompanyName = nodeListName.Count;
 
             // Create object for all the available IT Company
-            CompanyDetails[] company = new CompanyDetails[_countCompanyName];
+            CompanyDetails[] company = new CompanyDetails[countCompanyName];
 
             // Set name and address for each company in CompanyDetails object
-            for (int i = 0; i < _countCompanyName; i++)
+            for (int i = 0; i < countCompanyName; i++)
             {
                 company[i] = new CompanyDetails();
                 company[i].Name = nodeListName[i].InnerText;
@@ -116,17 +96,65 @@ namespace ITCompanyLocatorMVC.Service
 
             PageList.Add(company);
 
-            CountPageList = PageList.Count;
+            _countPageList = PageList.Count;
 
-            hasPreviousPage = false;
+            HasPreviousPage = false;
 
             if(PageList.Count >= 2)
             {
-                hasPreviousPage = true;
+                HasPreviousPage = true;
             }
 
             return company;
         }
-        
+
+        #endregion
+
+        #region Public Methods
+
+        public static CompanyDetails[] GiveCompanyDetails(params string[] cityName)
+        {
+            SearchCompany sc = new SearchCompany();
+
+            // Getting baseurl consist of cityname, api key, tokens(if any)
+            _baseUrl = sc.GiveBaseUrl(cityName);
+
+            //if args.length =2 , call give base url with token name
+
+            // Getting company details in xml based on passed BaseUrl
+            XmlDocument xmlDoc = ApiData.GiveCompaniesInXml(_baseUrl);
+
+            return sc.GetCompanies(xmlDoc);
+        }
+
+        public static CompanyDetails[] GetPreviousResults()
+        {
+            SearchCompany.CountPrevClicked++;
+            SearchCompany.IsToken = true;
+            CompanyDetails[] prevCompany = (CompanyDetails[])SearchCompany.PageList[SearchCompany._countPageList - 2];
+            if (SearchCompany._countPageList == 2)
+            {
+                SearchCompany.HasPreviousPage = false;
+            }
+
+            SearchCompany._countPageList -= 1;
+            return prevCompany;
+        }
+
+        public static CompanyDetails[] GetNextResults()
+        {
+            CompanyDetails[] nextCompany = (CompanyDetails[])SearchCompany.PageList[SearchCompany._countPageList];
+            SearchCompany.CountPrevClicked -= 1;
+            SearchCompany.HasPreviousPage = true;
+            if (SearchCompany._countPageList == 2)
+            {
+                SearchCompany.IsToken = false;
+            }
+            SearchCompany._countPageList += 1;
+            return nextCompany;
+        }
+
+        #endregion
+
     }
 }
