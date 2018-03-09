@@ -95,12 +95,16 @@ namespace ITCompanyLocatorMVC.Service
                 company[i].Address = nodeListAddress[i].InnerText;
             }
 
+            // Adding list of company in a readonly list
             PageList.Add(company);
 
+            // Keep track of number of added list of company
             _countPageList = PageList.Count;
 
+            // when we have only one page available i.e. PageList of length 1
             HasPreviousPage = false;
 
+            // Setting Previous pages available after we have 2 or more than 2 pages available in pagelist
             if(PageList.Count >= 2)
             {
                 HasPreviousPage = true;
@@ -113,6 +117,11 @@ namespace ITCompanyLocatorMVC.Service
 
         #region Public Methods
 
+        /// <summary>
+        /// Getting list of companies for passed city name
+        /// </summary>
+        /// <param name="cityName"></param>
+        /// <returns></returns>
         public static CompanyDetails[] GiveCompanyDetails(params string[] cityName)
         {
             SearchCompany sc = new SearchCompany();
@@ -128,23 +137,38 @@ namespace ITCompanyLocatorMVC.Service
             return sc.GetCompanies(xmlDoc);
         }
 
+        /// <summary>
+        /// Getting company details for next button clicked
+        /// </summary>
+        /// <returns></returns>
         public static CompanyDetails[] GetPreviousResults()
         {
+            // Keep track of prev button clicked
             CountPrevClicked++;
+
+            // Setting next button visible on UI
             IsToken = true;
             CompanyDetails[] prevCompany = PageList[_countPageList - 2];
+
+            // when PageList[0] is reached, then making prev button disable on UI
             if (_countPageList == 2)
             {
                 HasPreviousPage = false;
             }
 
             _countPageList -= 1;
+
             return prevCompany;
         }
 
+        /// <summary>
+        /// Getting company details for prev button clicked
+        /// </summary>
+        /// <returns></returns>
         public static CompanyDetails[] GetNextResults()
         {
             CompanyDetails[] nextCompany = PageList[_countPageList];
+
             CountPrevClicked -= 1;
             HasPreviousPage = true;
             if (_countPageList == 2)
@@ -152,6 +176,7 @@ namespace ITCompanyLocatorMVC.Service
                 IsToken = false;
             }
             _countPageList += 1;
+
             return nextCompany;
         }
 
