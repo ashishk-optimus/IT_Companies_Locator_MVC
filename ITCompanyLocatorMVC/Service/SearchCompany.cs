@@ -8,7 +8,8 @@ namespace ITCompanyLocatorMVC.Service
 {
     public class SearchCompany
     {
-        private static string _apiKey = "AIzaSyDXNm60TAWJ0dDIF6CDAYxzuEL5RP7Yv3E";
+
+        private const string ApiKey = "AIzaSyBnYtjMBztN69lfDr2UF04LJg1TpHAokek";
         private static readonly List<CompanyDetails[]> PageList = new List<CompanyDetails[]>();
         private static int _countPageList;
         private static string _baseUrl;
@@ -42,7 +43,7 @@ namespace ITCompanyLocatorMVC.Service
             if (cityNameAndTokenStrings.Length == 1)
             {
                 baseUrl = "https://maps.googleapis.com/maps/api/place/textsearch/xml?query=it+companies+in+" +
-                                 formattedCityName + "&hasNextPage=true&nextPage()=true&key=" + _apiKey;
+                                 formattedCityName + "&hasNextPage=true&nextPage()=true&key=" + ApiKey;
             }
 
             // URL mor making request to Google Places API along with the Key with token
@@ -50,7 +51,7 @@ namespace ITCompanyLocatorMVC.Service
             {
                 string nextPageToken = cityNameAndTokenStrings[1];
                 baseUrl = "https://maps.googleapis.com/maps/api/place/textsearch/xml?query=it+companies+in+" +
-                                 formattedCityName + "&hasNextPage=true&nextPage()=true&key=" + _apiKey + "&pagetoken=" + nextPageToken;
+                                 formattedCityName + "&hasNextPage=true&nextPage()=true&key=" + ApiKey + "&pagetoken=" + nextPageToken;
             }
 
             return baseUrl;

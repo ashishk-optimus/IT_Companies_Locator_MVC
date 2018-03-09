@@ -6,6 +6,7 @@ namespace ITCompanyLocatorMVC.Data
 {
     public class ApiData
     {
+        
         /// <summary>
         /// Return the response for given city in XmlDocument object for the given baseUrl
         /// </summary>
