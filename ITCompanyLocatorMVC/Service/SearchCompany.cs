@@ -129,28 +129,28 @@ namespace ITCompanyLocatorMVC.Service
 
         public static CompanyDetails[] GetPreviousResults()
         {
-            SearchCompany.CountPrevClicked++;
-            SearchCompany.IsToken = true;
-            CompanyDetails[] prevCompany = (CompanyDetails[])SearchCompany.PageList[SearchCompany._countPageList - 2];
-            if (SearchCompany._countPageList == 2)
+            CountPrevClicked++;
+            IsToken = true;
+            CompanyDetails[] prevCompany = PageList[_countPageList - 2];
+            if (_countPageList == 2)
             {
-                SearchCompany.HasPreviousPage = false;
+                HasPreviousPage = false;
             }
 
-            SearchCompany._countPageList -= 1;
+            _countPageList -= 1;
             return prevCompany;
         }
 
         public static CompanyDetails[] GetNextResults()
         {
-            CompanyDetails[] nextCompany = (CompanyDetails[])SearchCompany.PageList[SearchCompany._countPageList];
-            SearchCompany.CountPrevClicked -= 1;
-            SearchCompany.HasPreviousPage = true;
-            if (SearchCompany._countPageList == 2)
+            CompanyDetails[] nextCompany = PageList[_countPageList];
+            CountPrevClicked -= 1;
+            HasPreviousPage = true;
+            if (_countPageList == 2)
             {
-                SearchCompany.IsToken = false;
+                IsToken = false;
             }
-            SearchCompany._countPageList += 1;
+            _countPageList += 1;
             return nextCompany;
         }
 

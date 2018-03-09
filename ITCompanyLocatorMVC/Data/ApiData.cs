@@ -17,7 +17,7 @@ namespace ITCompanyLocatorMVC.Data
             HttpWebRequest req = WebRequest.Create(baseUrl) as HttpWebRequest;
 
             // Object of XmlDocument to hold the Http Response in XML format
-            XmlDocument _xmlDoc = new XmlDocument();
+            XmlDocument xmlDoc = new XmlDocument();
 
             if (req != null)
                 using (HttpWebResponse resp = req.GetResponse() as HttpWebResponse)
@@ -25,11 +25,11 @@ namespace ITCompanyLocatorMVC.Data
                     if (resp != null)
                     {
                         // Loading response to XmlDocument object
-                        _xmlDoc.Load(resp.GetResponseStream() ?? throw new InvalidOperationException()); 
+                        xmlDoc.Load(resp.GetResponseStream() ?? throw new InvalidOperationException()); 
                     }
                 }
 
-            return _xmlDoc;
+            return xmlDoc;
         }
     }
 }
