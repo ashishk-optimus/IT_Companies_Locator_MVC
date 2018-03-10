@@ -1,12 +1,13 @@
-﻿@if (ViewData["AvailableResults"] == (object) 0)
-{<row>
-    <div class="well well-lg">Invalid Location or No Companies exist for given Location name.</div>
-</row>
+﻿@if (ViewBag.AvailableResults == 0)
+{
+    <row>
+        <h4>Invalid location or no IT Companies exist in <b style="color: cornflowerblue">@ViewData["CityName"]</b></h4>
+    </row>
 }
 else
 {
     <row>
-        <h2>IT Companies at Location <b style="color: cornflowerblue">@ViewData["CityName"]</b></h2>
+        <h2>IT Companies in <b style="color: cornflowerblue">@ViewData["CityName"]</b></h2>
     </row>
     <row>
 
@@ -48,7 +49,6 @@ else
             </span>
         </div>
     </row>
-
 }
 
 

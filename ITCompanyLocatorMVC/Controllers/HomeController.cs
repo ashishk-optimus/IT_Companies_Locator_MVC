@@ -22,6 +22,12 @@ namespace ITCompanyLocatorMVC.Controllers
         {
             if (Request.Form.ContainsKey("cityName"))
             {
+                // Release all the acquired resources(if any) for new Http Search request
+                if(SearchCompany.CountPageList != 0)
+                {
+                    SearchCompany.ReleaseResource();
+                }
+
                 _cityName = Request.Form["cityName"].ToString();
 
                 // Getting list of objects for all the companies
@@ -54,7 +60,7 @@ namespace ITCompanyLocatorMVC.Controllers
             ViewData["CityName"] = _cityName;
             ViewData["isToken"] = SearchCompany.IsToken;
             ViewData["hasPreviousPage"] = SearchCompany.HasPreviousPage;
-            ViewData["AvailableResults"] = SearchCompany.CountPageList;
+            ViewBag.AvailableResults = SearchCompany.CountPageList;
 
             return View();
         }

@@ -16,8 +16,8 @@ namespace ITCompanyLocatorMVC.Service
 
         #region Private Fields
 
-        private const string ApiKey = "AIzaSyBnYtjMBztN69lfDr2UF04LJg1TpHAokek";
-        private static readonly List<CompanyDetails[]> PageList = new List<CompanyDetails[]>();
+        private const string ApiKey = "AIzaSyCd9fNJbo84SVZmoGDcyZ2FyCDTBFPKBGw";
+        private static List<CompanyDetails[]> PageList = new List<CompanyDetails[]>();
         private static string _baseUrl;
 
         #endregion
@@ -97,19 +97,25 @@ namespace ITCompanyLocatorMVC.Service
             // Count IT Companies for provided Location
             int countCompanyName = nodeListName.Count;
 
-            // Create object for all the available IT Company
-            CompanyDetails[] company = new CompanyDetails[countCompanyName];
+            CompanyDetails[] company = null;
 
-            // Set name and address for each company in CompanyDetails object
-            for (int i = 0; i < countCompanyName; i++)
+            if (countCompanyName != 0)
             {
-                company[i] = new CompanyDetails();
-                company[i].Name = nodeListName[i].InnerText;
-                company[i].Address = nodeListAddress[i].InnerText;
-            }
+                // Create object for all the available IT Company
+                company = new CompanyDetails[countCompanyName];
 
-            // Adding list of company in a readonly list
-            PageList.Add(company);
+                // Set name and address for each company in CompanyDetails object
+                for (int i = 0; i < countCompanyName; i++)
+                {
+                    company[i] = new CompanyDetails();
+                    company[i].Name = nodeListName[i].InnerText;
+                    company[i].Address = nodeListAddress[i].InnerText;
+                }
+
+                // Adding list of company in a readonly list
+                PageList.Add(company);
+            }
+            
 
             // Keep track of number of added list of company
             CountPageList = PageList.Count;
@@ -193,6 +199,19 @@ namespace ITCompanyLocatorMVC.Service
             CountPageList += 1;
 
             return nextCompany;
+        }
+
+        /// <summary>
+        /// Release all the acquired resources for a new Http Search Request
+        /// </summary>
+        public static void ReleaseResource()
+        {
+            PageList.Clear();
+            NextPageToken = null;
+            IsToken = false;
+            HasPreviousPage = false;
+            CountPrevClicked = 0;
+            CountPageList = 0;
         }
 
         #endregion
