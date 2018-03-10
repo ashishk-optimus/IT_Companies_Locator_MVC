@@ -32,9 +32,9 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-                <form name="searchForm" class="navbar-form navbar-left" role="form" action="/Home/SearchActionResult" method="post" onsubmit="return validateCity()">
+                <form name="searchForm" class="navbar-form navbar-left" role="form" action="/Home/SearchActionResult" method="post">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="inputCityName" name="cityName" placeholder="Type Location" required size="50">
+                        <input type="text" class="form-control" id="inputCityName" name="cityName" placeholder="Type Location" required size="50" pattern="[a-zA-Z0-9\s]+">
 
                     </div>
 
@@ -58,7 +58,6 @@
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/validation.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
